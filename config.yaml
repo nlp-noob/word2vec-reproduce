@@ -1,0 +1,18 @@
+model: cbow
+dataset: WikiText2
+data_dir: data/
+data_type: 0
+optimizer: Adam
+scheduler: MultiplicativeLR
+Mul: 0.95
+learning_rate: 0.03
+epochs: 200
+model_dir: 
+shuffle: 1
+device: cuda
+win_size: 7
+MIN_WORD_FREQUENCY: 20
+MAX_SEQUENCE_LENGTH: 256
+EMBED_DIMENSION: 300
+EMBED_MAX_NORM: 1
+BATCH_SIZE: 40
