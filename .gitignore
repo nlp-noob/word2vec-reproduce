@@ -1,2 +1,4 @@
 *.tokens
 *.zip
+*.pt
+events.out.*
