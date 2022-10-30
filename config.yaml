@@ -3,6 +3,8 @@ dataset: WikiText2
 data_dir: data/
 data_type: 0
 optimizer: Adam
+hiddenlayer: 0
+hiddenlayerN: 0
 scheduler: MultiplicativeLR
 Mul: 0.95
 learning_rate: 0.03

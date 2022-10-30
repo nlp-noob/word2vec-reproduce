@@ -6,6 +6,8 @@
 	|--dataset  # 设置相应使用的语料库 WikiText2和WikiText103
 	|--data_dir # 相应的存放数据的地方
 	|--data_type # 设置是使用自己的数据集还是使用导入的wiki的数据集(1,0)
+  |--hiddenlayer # 设置是否使用隐藏层
+  |--hiddenlayerN # 隐藏层的数量
   |--optimizer # 设置相应的优化器（Adam, SGD）
   |--scheduler # 设置相应的学习率衰减方法，目前只有MultiplicativeLR
   |--Mul # 假如设置了MultiplicativeLR，设置其相应的参数
