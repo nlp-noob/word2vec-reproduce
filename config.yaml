@@ -1,12 +1,12 @@
 model: cbow
-dataset: WikiText2
+dataset: WikiText103
 data_dir: data/
 data_type: 0
 optimizer: Adam
 hiddenlayer: 0
 hiddenlayerN: 0
 scheduler: MultiplicativeLR
-Mul: 0.95
+Mul: 0.99
 learning_rate: 0.03
 epochs: 200
 model_dir: 
