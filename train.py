@@ -210,7 +210,7 @@ def format_model_dir(config):
                                                             config["win_size"], 
                                                             config["BATCH_SIZE"],
                                                             config["EMBED_DIMENSION"],
-                                                            config["Mul"]*100) 
+                                                            int(config["Mul"]*100)) 
     else:
         modeldir = "./weights/{}_Win{}_BAT{}_DIM{}".format(config["model"], 
                                                             config["win_size"], 
