@@ -206,13 +206,17 @@ def train(config, train_iteror, valid_iteror, vocab):
 
 def format_model_dir(config):
     if(config["scheduler"]=="MultiplicativeLR"):
-        modeldir = "./weights/{}_Win{}_BAT{}_DIM{}_Mul{}".format(config["model"], 
+        modeldir = "./weights/{}_{}_Win{}_BAT{}_DIM{}_Mul{}".format(
+                                                            config["dataset"],
+                                                            config["model"], 
                                                             config["win_size"], 
                                                             config["BATCH_SIZE"],
                                                             config["EMBED_DIMENSION"],
                                                             int(config["Mul"]*100)) 
     else:
-        modeldir = "./weights/{}_Win{}_BAT{}_DIM{}".format(config["model"], 
+        modeldir = "./weights/{}_{}_Win{}_BAT{}_DIM{}".format(
+                                                            config["dataset"],
+                                                            config["model"], 
                                                             config["win_size"], 
                                                             config["BATCH_SIZE"],
                                                             config["EMBED_DIMENSION"]) 
