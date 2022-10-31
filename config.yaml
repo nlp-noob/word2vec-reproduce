@@ -1,5 +1,5 @@
 model: cbow
-dataset: WikiText103
+dataset: WikiText2
 data_dir: data/
 data_type: 0
 optimizer: Adam
@@ -13,8 +13,8 @@ model_dir:
 shuffle: 1
 device: cuda
 win_size: 5
-MIN_WORD_FREQUENCY: 20
+MIN_WORD_FREQUENCY: 50
 MAX_SEQUENCE_LENGTH: 256
-EMBED_DIMENSION: 300
+EMBED_DIMENSION: 500
 EMBED_MAX_NORM: 1
-BATCH_SIZE: 20
+BATCH_SIZE: 96

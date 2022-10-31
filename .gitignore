@@ -3,3 +3,4 @@
 *.pt
 events.out.*
 *.bin
+*review.json

@@ -44,7 +44,7 @@ def cosine_vec(a_vec, b_vec):
 def main():
     # original code path
     # folder = "../../LearningWord2vec/word2vec-pytorch-main/weights/cbow_Win5_WikiText2/"
-    folder = "../weights/cbow_Win6_BAT40_DIM300_Mul95.0/"
+    folder = "../weights/WikiText2_cbow_Win5_BAT96_DIM500_Mul99/"
     word_pairs = get_test_data()
     embeddings_list = get_embeddings(folder)
     vocab = torch.load(folder+"vocab.pt")
