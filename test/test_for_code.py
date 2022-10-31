@@ -90,7 +90,7 @@ def build_vocab(data_iter, tokenizer, config):
 
 
 def get_data_and_vocab(config):
-    dataset = WikiText2
+    dataset = WikiText103
     train_iteror = dataset("../"+config["data_dir"], split="train") 
     tokenizer = get_tokenizer("basic_english")
     vocab = build_vocab(train_iteror, tokenizer, config)
@@ -101,9 +101,17 @@ def test():
     with open("../config.yaml", 'r') as stream:
         config = yaml.safe_load(stream)
     train_iteror, vocab = get_data_and_vocab(config)
+
     batches, labels = CBOW_batches_generator(config, train_iteror, vocab)
     random.seed(42)
     tokenizer = get_tokenizer("basic_english")
+    # get total_words_num
+    totalword = 0
+    for sentence in list(train_iteror):
+        sentence = tokenizer(sentence)
+        totalword += len(sentence)
+    print(f"the total word in corpus is:{totalword}")
+    
     text_pipline = lambda x: vocab(tokenizer(x))
     dataloader = DataLoader(train_iteror, config["BATCH_SIZE"],
                             shuffle=SHUFFLE, 
