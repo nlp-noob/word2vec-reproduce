@@ -1,5 +1,3 @@
-# 代码开始进行训练的入口
-# 其中的过程：
 import argparse
 import random
 import yaml
