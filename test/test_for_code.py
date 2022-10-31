@@ -101,8 +101,6 @@ def test():
     with open("../config.yaml", 'r') as stream:
         config = yaml.safe_load(stream)
     train_iteror, vocab = get_data_and_vocab(config)
-
-    batches, labels = CBOW_batches_generator(config, train_iteror, vocab)
     random.seed(42)
     tokenizer = get_tokenizer("basic_english")
     # get total_words_num
@@ -111,6 +109,7 @@ def test():
         sentence = tokenizer(sentence)
         totalword += len(sentence)
     print(f"the total word in corpus is:{totalword}")
+    batches, labels = CBOW_batches_generator(config, train_iteror, vocab)
     
     text_pipline = lambda x: vocab(tokenizer(x))
     dataloader = DataLoader(train_iteror, config["BATCH_SIZE"],
