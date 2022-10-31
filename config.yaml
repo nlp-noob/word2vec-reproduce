@@ -12,7 +12,7 @@ epochs: 200
 model_dir: 
 shuffle: 1
 device: cuda
-win_size: 6
+win_size: 5
 MIN_WORD_FREQUENCY: 20
 MAX_SEQUENCE_LENGTH: 256
 EMBED_DIMENSION: 300
