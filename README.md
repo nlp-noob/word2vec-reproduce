@@ -692,7 +692,153 @@ skip-gram: 10
 
 以下是使用模型测试的结果：
 
+### 完美Evaluation？
 
+之前我一直有一个认知误区，认为对于词向量的评估有一个完美的方案，通过阅读相关的evaluation论文才发现，对于这个问题并没有十分完美的解决方案。或者说，使用单一的标准来评估一个词向量的好坏是不靠谱的。
+
+embedding评估方法本身就是一个难题。正如许多模型的评估一样，如果仅仅是通过单一的指标来进行评估，往往不能令人信服。
+
+词向量的本质实际上就是人类语言中的词语，映射到高维空间上的一组向量。向量之间所隐含的关系可能就代表了词语之间的语义关系。
+
+所以评估词向量实际上就是研究高维空间内的一组向量之间的关系问题。
+
+实际上，评价词向量质量的最好方式就是使用它完成具体任务，根据完成各种任务的综合收益来实现标准。
+
+参考：https://blog.csdn.net/Dby_freedom/article/details/88820726
+
+# 综合评估
+
+那么评估词向量就有两个大方向：
+
+```
+1.内在
+2.外在
+```
+
+所谓的内在就是直接通过词向量表征来查看词语之间的相似性。
+
+所谓的外在就是通过下游任务来间接评估词向量。
+
+### 内在
+
+##### 1.相关性
+
+对两个词之间的相关性进行人工评分。通过比较两个词向量之间的cos相似度和人工评分之间的相关性就可以评估。
+
+在这里首先根据卡耐基梅隆大学的方法进行相似性的评估。
+
+ [Community Evaluation and Exchange of Word Vectors at wordvectors.org (aclanthology.org)](https://aclanthology.org/P14-5004.pdf) 
+
+ 在文中使用的评估相似性使用了十种标准：
+
+ ```
+ 1.WS-353: 这个数据集含有153对英语单词，每一对都被打上了对应的相似性分数
+ ```
+
+ ```
+   1 #Word 1 Word 2  Human (mean)
+      2 # i = identical tokens
+        3 # s = synonym (at least in one meaning of each)
+      4 # a = antonyms (at least in one meaning of each)
+      5 # h = first is hyponym of second (at least in one meaning of each)
+      6 # H = first is hyperonym of second (at least in one meaning of each)
+      7 # S = sibling terms (terms with a common hyperonymy)
+      8 # m = first is part of the second one (at least in one meaning of each)
+      9 # M = second is part of the first one (at least in one meaning of each)
+     10 # t = topically related, but none of the above
+      11 #
+       12 t   love    sex 6.77
+        13 h   tiger   cat 7.35
+         14 i   tiger   tiger   10.00
+          15 t   book    paper   7.46
+           16 M   computer    keyboard    7.62
+            17 t   computer    internet    7.58
+             18 S   plane   car 5.77
+              19 S   train   car 6.31
+               20 t   telephone   communication   7.50
+                21 S   television  radio   6.77
+                 22 H   media   radio   7.42
+                  23 t   drug    abuse   6.85
+                   24 S   bread   butter  6.19
+                    25 S   cucumber    potato  5.92
+                     26 S   doctor  nurse   7.00
+                      27 S   professor   doctor  6.62
+
+                      ```
+
+                      可以看到这里面对不同性质的相关也做了分类，目前先把这些相关性都视为一种类别。
+
+                      ```
+                       method : {'pearson', 'kendall', 'spearman'} or callable
+                                   Method of correlation:
+
+                                               * pearson : standard correlation coefficient
+                                                           * kendall : Kendall Tau correlation coefficient
+                                                                       * spearman : Spearman rank correlation
+                                                                                   * callable: callable with input two 1d ndarrays
+                                                                                                   and returning a float. Note that the returned matrix from corr
+                                                                                                                   will have 1 along the diagonals and will be symmetric
+                                                                                                                                   regardless of the callable's behavior.
+                                                                                                                                           min_periods : int, optional
+                                                                                                                                                       Minimum number of observations required per pair of columns
+                                                                                                                                                                   to have a valid result. Currently only available for Pearson
+                                                                                                                                                                               and Spearman correlation.
+
+                                                                                                                                                                                       Returns
+                                                                                                                                                                                               -------
+                                                                                                                                                                                                       DataFrame
+                                                                                                                                                                                                                   Correlation matrix.
+
+                                                                                                                                                                                                                           See Also
+                                                                                                                                                                                                                                   --------
+                                                                                                                                                                                                                                           DataFrame.corrwith : Compute pairwise correlation with another
+                                                                                                                                                                                                                                                       DataFrame or Series.
+                                                                                                                                                                                                                                                               Series.corr : Compute the correlation between two Series.
+
+                                                                                                                                                                                                                                                                       Examples
+                                                                                                                                                                                                                                                                               --------
+                                                                                                                                                                                                                                                                                       >>> def histogram_intersection(a, b):
+                                                                                                                                                                                                                                                                                                   ...     v = np.minimum(a, b).sum().round(decimals=1)
+                                                                                                                                                                                                                                                                                                                   ...     return v
+                                                                                                                                                                                                                                                                                                                   >>> df = pd.DataFrame([(.2, .3), (.0, .6), (.6, .0), (.2, .1)],
+                                                                                                                                                                                                                                                                                                                                   ...                   columns=['dogs', 'cats'])
+                                                                                                                                                                                                                                                                                                                   >>> df.corr(method=histogram_intersection)
+                                                                                                                                                                                                                                                                                                                         dogs  cats
+                                                                                                                                                                                                                                                                                                                   dogs   1.0   0.3
+                                                                                                                                                                                                                                                                                                                   cats   0.3   1.0
+                                                                                                                                                                                                                                                                                                           ```
+
+                                                                                                                                                                                                                                                                                                           使用pandas提供的方法即可进行三种相关性验证。
+
+
+
+
+
+##### 2.类比anology
+
+                                                                                                                                                                                                                                                                                                           ```
+                                                                                                                                                                                                                                                                                                           vec(中国)-vec(北京)=vec(法国)-vec(巴黎)
+    ```
+
+
+
+##### 3.分类
+
+    对词打上类别标签，通过词向量来聚类，评判聚类的好坏
+
+
+
+##### 4.词法
+
+    确定一个名词是主语还是宾语
+
+
+
+### 结论
+
+    不同的下游任务，不同的词向量构造方法表现有差异，一种方法不会完美适用于所有下游任务。
+
+    词向量中蕴含词频信息，是词向量的一个缺陷。（数据驱动的弊端，对低频词表现差）
 
 
 
