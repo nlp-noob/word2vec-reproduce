@@ -42,7 +42,7 @@ def cosine_vec(a_vec, b_vec):
     return 0.5 + 0.5 * (num / denom) if denom != 0 else 0
 
 def main():
-    folder = "../weights/cbow_Win5_BAT40_DIM300_Mul95.0/"
+    folder = "../weights/cbow_Win6_BAT40_DIM300_Mul95.0/"
     word_pairs = get_test_data()
     embeddings_list = get_embeddings(folder)
     vocab = torch.load(folder+"vocab.pt")
