@@ -42,11 +42,14 @@ def cosine_vec(a_vec, b_vec):
     return 0.5 + 0.5 * (num / denom) if denom != 0 else 0
 
 def main():
+    # original code path
+    # folder = "../../LearningWord2vec/word2vec-pytorch-main/weights/cbow_Win5_WikiText2/"
     folder = "../weights/cbow_Win6_BAT40_DIM300_Mul95.0/"
     word_pairs = get_test_data()
     embeddings_list = get_embeddings(folder)
     vocab = torch.load(folder+"vocab.pt")
     writer = SummaryWriter(folder+"log")
+    corr_list = []
     for index in range(len(embeddings_list)):
         similarity_list = []
         for word_pair in word_pairs:
@@ -60,10 +63,13 @@ def main():
             similarity_list.append((sim, word_pair[3]))
         df = pandas.DataFrame(similarity_list)
         corr = df.corr()[0][1]
+        corr_list.append(corr)
         if(index%10==0):
             print("the {} corr_similarity is {}".format(index, corr))
         epoch = index
         writer.add_scalar("corr_similarity", float(corr), global_step=(epoch))
+    print("the max similarity is {}, epoch{}".format(np.max(corr_list), np.where(corr_list==np.max(corr_list))))
+    print("the random embeddings similarity is {}".format(corr_list[0]))
 
 if __name__=="__main__":
     main()
